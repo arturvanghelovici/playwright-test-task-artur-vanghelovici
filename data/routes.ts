@@ -2,6 +2,7 @@ export enum Route {
   Login = '/',
   Products = '/inventory.html',
   Cart = '/cart.html',
+  CheckoutInfo = '/checkout-step-one.html',
 }
 
 export namespace Route {
