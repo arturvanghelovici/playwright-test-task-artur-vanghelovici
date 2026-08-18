@@ -7,7 +7,7 @@ import { STANDARD_USER_STORAGE_STATE_PATH } from '../data/auth';
 import { Route } from '../data/routes';
 
 // Starts already logged in as standard_user via the storageState saved by
-// global-setup.ts, no UI login is repeated per test.
+// tests/auth.setup.ts, no UI login is repeated per test.
 test.use({ storageState: STANDARD_USER_STORAGE_STATE_PATH });
 
 test.describe('Cart', () => {

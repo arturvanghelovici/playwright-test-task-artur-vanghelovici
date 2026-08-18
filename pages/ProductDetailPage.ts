@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { HeaderComponent } from '../components/HeaderComponent';
-import type { ProductDetails } from './ProductsPage';
+import type { ProductDetails } from '../components/CatalogLineItem';
 
 /**
  * Page object for a single product's detail page (`/inventory-item.html?id=...`),
