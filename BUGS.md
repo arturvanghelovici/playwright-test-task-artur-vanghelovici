@@ -188,3 +188,31 @@ Screen recording reproducing the stuck Last Name field: [BUG-006-problem-user-la
 **Attachment:**
 
 Screen recording showing Remove failing on the Products page and succeeding from the Cart page: [BUG-008-error-user-remove-503-workaround-via-cart.mov](bugs/attachments/BUG-008-error-user-remove-503-workaround-via-cart.mov)
+
+## BUG-009: visual_user has broken layout on the Products and Cart pages
+
+**Environment:** Chrome (latest), macOS, 1699x1323 viewport
+
+**Steps to Reproduce:**
+1. Log in as `visual_user` / `secret_sauce`
+2. Observe the Products page layout
+3. Add an item to the cart and click the cart icon to open Your Cart
+4. Observe the Cart page layout
+
+**Expected:** "Add to cart"/"Remove" buttons are aligned consistently to product's price, and the Cart page's Checkout button renders inside the cart footer next to "Continue Shopping", matching `standard_user`.
+
+**Actual:** On the Products page, the "Add to cart"/"Remove" buttons render with inconsistent sizing/alignment relative to the price row across cards. On the Cart page, the Checkout button is not in the cart footer at all, it renders to the top-right of the header bar, overlapping the "Swag Labs" title area.
+
+**Severity:** S3: purely visual/layout defect, all buttons remain clickable and functional (add/remove/checkout still work), but the page looks broken.
+
+**Priority:** P2: the misplaced Checkout button is highly visible and could easily be mistaken for a broken or untrustworthy checkout flow, worth fixing even though nothing is functionally blocked.
+
+**Attachment:**
+
+Products page with misaligned Add to cart/Remove buttons:
+
+![Products page showing inconsistently aligned Add to cart and Remove buttons for visual_user](bugs/attachments/BUG-009-visual-user-products-buttons-misaligned.png)
+
+Cart page with the Checkout button mispositioned in the header instead of the cart footer:
+
+![Cart page showing the Checkout button rendered in the top-right of the header instead of the cart footer for visual_user](bugs/attachments/BUG-009-visual-user-cart-checkout-misplaced.png)
