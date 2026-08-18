@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 import { Route } from '../data/routes';
 
 export class LoginPage {
@@ -35,10 +35,5 @@ export class LoginPage {
     } catch (error) {
       throw new Error('Failed to submit login form', { cause: error });
     }
-  }
-
-  async expectErrorMessage(message: string): Promise<void> {
-    await expect(this.errorMessage).toBeVisible();
-    await expect(this.errorMessage).toContainText(`Epic sadface: ${message}`);
   }
 }

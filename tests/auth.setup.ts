@@ -11,6 +11,9 @@ import { Route } from '../data/routes';
  * it via `test.use({ storageState: STANDARD_USER_STORAGE_STATE_PATH })` instead of
  * repeating the UI login flow.
  */
+// Side-effecting setup (saves storageState), not a behavioral test;
+// page.waitForURL already fails the run if login didn't land on Products.
+// eslint-disable-next-line playwright/expect-expect
 setup('authenticate as standard_user', async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.goto();

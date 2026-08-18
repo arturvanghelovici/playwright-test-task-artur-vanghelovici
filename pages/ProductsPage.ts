@@ -1,4 +1,4 @@
-import { expect, type Locator, type Page } from '@playwright/test';
+import { type Locator, type Page } from '@playwright/test';
 import { HeaderComponent } from '../components/HeaderComponent';
 
 export interface ProductDetails {
@@ -82,10 +82,6 @@ export class ProductsPage {
     this.page = page;
     this.header = new HeaderComponent(page);
     this.pageTitle = page.getByText('Products', { exact: true });
-  }
-
-  async pageTitleIsVisible(): Promise<void> {
-    await expect(this.pageTitle).toBeVisible();
   }
 
   /** Scopes a card by matching its name text. */

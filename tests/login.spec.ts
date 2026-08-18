@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { ProductsPage } from '../pages/ProductsPage';
 import { SAUCE_DEMO_PASSWORD, SauceDemoUser } from '../data/users';
@@ -30,7 +30,7 @@ test.describe('Login', () => {
       await loginPage.submitLogin();
       await page.waitForURL(Route.Products);
 
-      await productsPage.pageTitleIsVisible();
+      await expect(productsPage.pageTitle).toBeVisible();
     });
   }
 
@@ -38,6 +38,9 @@ test.describe('Login', () => {
     await loginPage.fillLogin(SauceDemoUser.LockedOut, SAUCE_DEMO_PASSWORD);
     await loginPage.submitLogin();
 
-    await loginPage.expectErrorMessage('Sorry, this user has been locked out.');
+    await expect(loginPage.errorMessage).toBeVisible();
+    await expect(loginPage.errorMessage).toContainText(
+      'Epic sadface: Sorry, this user has been locked out.',
+    );
   });
 });

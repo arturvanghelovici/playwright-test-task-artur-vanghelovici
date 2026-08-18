@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { ProductsPage } from '../pages/ProductsPage';
 import { ProductDetailPage } from '../pages/ProductDetailPage';
 import { CartPage } from '../pages/CartPage';
@@ -23,17 +23,17 @@ test.describe('Cart', () => {
 
     await productsPage.addToCart(product.name);
 
-    await productsPage.header.expectCartCount(1);
+    await expect(productsPage.header.cartBadge).toHaveText('1');
   });
 
   test('removing a product from the Products page leaves the cart showing no items', async () => {
     const product = await productsPage.productAt(0).getDetails();
     await productsPage.addToCart(product.name);
-    await productsPage.header.expectCartCount(1);
+    await expect(productsPage.header.cartBadge).toHaveText('1');
 
     await productsPage.removeFromCart(product.name);
 
-    await productsPage.header.expectCartCount(0);
+    await expect(productsPage.header.cartBadge).toBeHidden();
   });
 
   test('product detail page shows the same name, description, and price as the Products list', async ({
@@ -56,7 +56,7 @@ test.describe('Cart', () => {
 
     await productDetailPage.addToCart();
 
-    await productDetailPage.header.expectCartCount(1);
+    await expect(productDetailPage.header.cartBadge).toHaveText('1');
   });
 
   test('removing a product from the detail page leaves the cart showing no items', async ({
@@ -67,11 +67,11 @@ test.describe('Cart', () => {
     await page.waitForURL(Route.ProductDetailPattern);
     const productDetailPage = new ProductDetailPage(page);
     await productDetailPage.addToCart();
-    await productDetailPage.header.expectCartCount(1);
+    await expect(productDetailPage.header.cartBadge).toHaveText('1');
 
     await productDetailPage.removeFromCart();
 
-    await productDetailPage.header.expectCartCount(0);
+    await expect(productDetailPage.header.cartBadge).toBeHidden();
   });
 
   test('cart page shows the item added from the Products page with matching details', async ({
@@ -97,7 +97,7 @@ test.describe('Cart', () => {
 
     await cartPage.removeItem(product.name);
 
-    await cartPage.header.expectCartCount(0);
+    await expect(cartPage.header.cartBadge).toBeHidden();
   });
 
   test('going back to products from the detail page returns to the Products page', async ({
@@ -111,7 +111,7 @@ test.describe('Cart', () => {
     await productDetailPage.goBackToProducts();
 
     await page.waitForURL(Route.Products);
-    await productsPage.pageTitleIsVisible();
+    await expect(productsPage.pageTitle).toBeVisible();
   });
 
   test('continuing shopping from the Cart page returns to the Products page', async ({ page }) => {
@@ -124,7 +124,7 @@ test.describe('Cart', () => {
     await cartPage.continueShopping();
 
     await page.waitForURL(Route.Products);
-    await productsPage.pageTitleIsVisible();
+    await expect(productsPage.pageTitle).toBeVisible();
   });
 
   test('checking out from the Cart page navigates to the checkout info page', async ({ page }) => {
@@ -137,5 +137,7 @@ test.describe('Cart', () => {
     await cartPage.checkout();
 
     await page.waitForURL(Route.CheckoutInfo);
+    const checkoutPage = new CheckoutPage(page);
+    await expect(checkoutPage.firstNameInput).toBeVisible();
   });
 });
