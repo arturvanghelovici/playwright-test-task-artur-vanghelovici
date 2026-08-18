@@ -216,3 +216,65 @@ Products page with misaligned Add to cart/Remove buttons:
 Cart page with the Checkout button mispositioned in the header instead of the cart footer:
 
 ![Cart page showing the Checkout button rendered in the top-right of the header instead of the cart footer for visual_user](bugs/attachments/BUG-009-visual-user-cart-checkout-misplaced.png)
+
+## BUG-010: Cart quantity cannot be changed, for any user
+
+**Environment:** Chrome (latest), macOS, 1699x1323 viewport
+
+**Steps to Reproduce:**
+1. Log in as any accepted user (verified with `standard_user` / `secret_sauce`, applies to all users since this is general app behavior, not user-specific)
+2. Add a product to the cart from the Products page
+3. Click the cart icon to open Your Cart
+4. Look for a way to increase or decrease the QTY value for the line item
+
+**Expected:** The QTY column lets the user change how many of an item they want, either via a stepper, editable input, or increasing the count by adding the same item again, without having to remove and re-add it.
+
+**Actual:** The QTY value on the Cart page is a static, non-interactive number (always "1"), there is no input, stepper, dropdown, or any control to change it. Clicking "Add to cart" again for an item already in the cart is not possible either, the Products page button has already toggled to "Remove" for that item, so there is no way to reach a quantity greater than 1 for any single product from anywhere in the UI.
+
+**Severity:** S3: no data corruption or blocked purchase, a single unit of each product can still be bought, but a core, commonly expected cart capability is entirely absent.
+
+**Priority:** P3: workaround exists for buying multiple distinct products (add several different items), and this may be an intentional simplification of a demo/training app rather than a real product gap; still worth flagging as a UX limitation.
+
+## BUG-011: error_user can continue checkout with an empty Last Name field
+
+**Environment:** Chrome (latest), macOS, 1699x1323 viewport
+
+**Steps to Reproduce:**
+1. Log in as `error_user` / `secret_sauce`
+2. Click the cart icon to open Your Cart, then click Checkout (reproduces the same way whether the cart is empty or has items, cart state is not a factor)
+3. On the Your Information page, enter First Name and Postal Code, leave Last Name blank
+4. Click Continue
+
+**Expected:** Continue is blocked with "Error: Last Name is required" and the user stays on the Your Information page, same as `standard_user` (see checkout.spec.ts's required-field tests).
+
+**Actual:** For `error_user`, Continue succeeds despite the empty Last Name field, the required-field validation is silently bypassed and the user proceeds to the Checkout: Overview page with incomplete customer information.
+
+**Severity:** S2: lets an order proceed with missing required data for this user, a data-integrity gap on the checkout transaction, though it doesn't crash or block the rest of the flow.
+
+**Priority:** P2: inconsistent with every other user's validated behavior and would let malformed orders through in a real system, but scoped to one user type.
+
+**Attachment:**
+
+Screen recording (also covers BUG-012, same repro session): [BUG-011-012-error-user-last-name-bypass-and-finish-stuck.mov](bugs/attachments/BUG-011-012-error-user-last-name-bypass-and-finish-stuck.mov)
+
+## BUG-012: error_user, Finish does nothing on the Checkout Overview page after continuing with an empty Last Name
+
+**Environment:** Chrome (latest), macOS, 1699x1323 viewport
+
+**Steps to Reproduce:**
+1. Log in as `error_user` / `secret_sauce`
+2. Click the cart icon to open Your Cart, then click Checkout (reproduces the same way whether the cart is empty or has items, cart state is not a factor)
+3. On the Your Information page, enter First Name and Postal Code, leave Last Name blank, click Continue (see BUG-011, validation is bypassed and the page advances anyway)
+4. On the Checkout: Overview page, click Finish
+
+**Expected:** Either the order completes normally and the user reaches "Checkout: Complete!", or, if the missing Last Name is meant to block the order, Finish shows a clear validation error explaining why the order cannot be placed.
+
+**Actual:** Clicking Finish does nothing. The page does not navigate to the confirmation page, and no error message is shown. The user is stuck on the Overview page with no feedback and no way to tell why the order isn't going through.
+
+**Severity:** S2: a genuine dead end for this user, checkout cannot be completed and there is no explanation shown, though it does not crash the app or affect other users.
+
+**Priority:** P2: directly blocks order completion for this user once BUG-011 has let them advance with incomplete data; silent failure with zero user feedback makes it worse than a simple validation error would be.
+
+**Attachment:**
+
+Screen recording (also covers BUG-011, same repro session): [BUG-011-012-error-user-last-name-bypass-and-finish-stuck.mov](bugs/attachments/BUG-011-012-error-user-last-name-bypass-and-finish-stuck.mov)

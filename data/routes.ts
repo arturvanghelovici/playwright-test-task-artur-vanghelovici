@@ -3,6 +3,8 @@ export enum Route {
   Products = '/inventory.html',
   Cart = '/cart.html',
   CheckoutInfo = '/checkout-step-one.html',
+  CheckoutOverview = '/checkout-step-two.html',
+  CheckoutComplete = '/checkout-complete.html',
 }
 
 // Not a true enum member: enum values must be string/number literals, and the
