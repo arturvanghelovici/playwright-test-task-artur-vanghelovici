@@ -1,23 +1,6 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { HeaderComponent } from '../components/HeaderComponent';
-import type { ProductDetails } from './ProductsPage';
-
-/** A single line item on the Checkout Overview page, scoped to a given container. */
-class OverviewLineItem {
-  readonly container: Locator;
-  readonly quantity: Locator;
-  readonly name: Locator;
-  readonly description: Locator;
-  readonly price: Locator;
-
-  constructor(container: Locator) {
-    this.container = container;
-    this.quantity = container.getByTestId('item-quantity');
-    this.name = container.getByTestId('inventory-item-name');
-    this.description = container.getByTestId('inventory-item-desc');
-    this.price = container.getByTestId('inventory-item-price');
-  }
-}
+import { CatalogLineItem, type ProductDetails } from '../components/CatalogLineItem';
 
 /** Page object for the "Checkout: Overview" step (`/checkout-step-two.html`). */
 export class CheckoutOverviewPage {
@@ -40,15 +23,9 @@ export class CheckoutOverviewPage {
   }
 
   /** Scopes a line item by matching its name text. */
-  item(productName: string): OverviewLineItem {
+  item(productName: string): CatalogLineItem {
     const container = this.page.getByTestId('inventory-item').filter({ hasText: productName });
-    return new OverviewLineItem(container);
-  }
-
-  /** Scopes a line item by its position, so tests don't need to know any product's name up front. */
-  itemAt(index: number): OverviewLineItem {
-    const container = this.page.getByTestId('inventory-item').nth(index);
-    return new OverviewLineItem(container);
+    return new CatalogLineItem(container);
   }
 
   async expectItemVisible(expected: ProductDetails): Promise<void> {

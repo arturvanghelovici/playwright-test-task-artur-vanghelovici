@@ -53,7 +53,7 @@ test.describe('Checkout: Your Information', () => {
   });
 
   for (const { field, firstName, lastName, postalCode, expectedError } of REQUIRED_FIELD_CASES) {
-    test(`Continue is blocked when ${field} is empty`, async ({ page }) => {
+    test(`continue is blocked when ${field} is empty`, async ({ page }) => {
       await checkoutPage.fillInfo(firstName, lastName, postalCode);
 
       await checkoutPage.continueCheckout();
@@ -64,7 +64,7 @@ test.describe('Checkout: Your Information', () => {
     });
   }
 
-  test('Continue with valid info moves forward to the checkout overview', async ({ page }) => {
+  test('continue with valid info moves forward to the checkout overview', async ({ page }) => {
     await checkoutPage.fillInfo('John', 'Doe', '12345');
 
     await checkoutPage.continueCheckout();
@@ -72,7 +72,7 @@ test.describe('Checkout: Your Information', () => {
     await expect(page).toHaveURL(Route.CheckoutOverview);
   });
 
-  test('Cancel navigates back to the Cart page', async ({ page }) => {
+  test('cancel navigates back to the Cart page', async ({ page }) => {
     await checkoutPage.cancel();
 
     await expect(page).toHaveURL(Route.Cart);

@@ -1,11 +1,6 @@
 import { type Locator, type Page } from '@playwright/test';
 import { HeaderComponent } from '../components/HeaderComponent';
-
-export interface ProductDetails {
-  name: string;
-  description: string;
-  price: string;
-}
+import { CatalogLineItem } from '../components/CatalogLineItem';
 
 /**
  * A single product card on the Products page, scoped to a given container
@@ -19,21 +14,14 @@ export interface ProductDetails {
  * which would have to reproduce the app's slugify logic and is more brittle
  * than scoping by container.
  */
-class ProductCard {
-  readonly container: Locator;
-  readonly name: Locator;
-  readonly description: Locator;
-  readonly price: Locator;
+class ProductCard extends CatalogLineItem {
   readonly addToCartButton: Locator;
   readonly removeButton: Locator;
   private readonly label: string;
 
   constructor(container: Locator, label: string) {
-    this.container = container;
+    super(container);
     this.label = label;
-    this.name = container.getByTestId('inventory-item-name');
-    this.description = container.getByTestId('inventory-item-desc');
-    this.price = container.getByTestId('inventory-item-price');
     this.addToCartButton = container.getByRole('button', { name: 'Add to cart' });
     this.removeButton = container.getByRole('button', { name: 'Remove' });
   }
@@ -60,16 +48,6 @@ class ProductCard {
     } catch (error) {
       throw new Error(`Failed to remove "${this.label}" from cart`, { cause: error });
     }
-  }
-
-  /** Reads this card's catalog data straight from the page instead of relying on hardcoded fixtures. */
-  async getDetails(): Promise<ProductDetails> {
-    const [name, description, price] = await Promise.all([
-      this.name.innerText(),
-      this.description.innerText(),
-      this.price.innerText(),
-    ]);
-    return { name, description, price };
   }
 }
 

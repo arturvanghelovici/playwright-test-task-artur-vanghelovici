@@ -1,24 +1,15 @@
 import { expect, type Locator, type Page } from '@playwright/test';
 import { HeaderComponent } from '../components/HeaderComponent';
-import type { ProductDetails } from './ProductsPage';
+import { CatalogLineItem, type ProductDetails } from '../components/CatalogLineItem';
 
 /** A single line item on the Cart page, scoped to a given container. */
-class CartLineItem {
-  readonly container: Locator;
-  readonly quantity: Locator;
-  readonly name: Locator;
-  readonly description: Locator;
-  readonly price: Locator;
+class CartLineItem extends CatalogLineItem {
   readonly removeButton: Locator;
   private readonly label: string;
 
   constructor(container: Locator, label: string) {
-    this.container = container;
+    super(container);
     this.label = label;
-    this.quantity = container.getByTestId('item-quantity');
-    this.name = container.getByTestId('inventory-item-name');
-    this.description = container.getByTestId('inventory-item-desc');
-    this.price = container.getByTestId('inventory-item-price');
     this.removeButton = container.getByRole('button', { name: 'Remove' });
   }
 
@@ -48,12 +39,6 @@ export class CartPage {
   item(productName: string): CartLineItem {
     const container = this.page.getByTestId('inventory-item').filter({ hasText: productName });
     return new CartLineItem(container, productName);
-  }
-
-  /** Scopes a line item by its position, so tests don't need to know any product's name up front. */
-  itemAt(index: number): CartLineItem {
-    const container = this.page.getByTestId('inventory-item').nth(index);
-    return new CartLineItem(container, `item at index ${index}`);
   }
 
   async removeItem(productName: string): Promise<void> {
