@@ -10,6 +10,20 @@ jobs:
   test:
     timeout-minutes: 30
     runs-on: ubuntu-latest
+    # Pinned to the exact @playwright/test version in package-lock.json.
+    # Ships OS deps (fonts, GStreamer, etc.) and browsers pre-baked, so no
+    # apt-get or `playwright install` step is needed, and CI isn't exposed to
+    # a slow/flaky Ubuntu package mirror on every run.
+    # If package-lock.json's @playwright/test version ever changes, bump the
+    # tag below to match, otherwise the test runner and the image's browsers
+    # can drift out of sync.
+    container:
+      image: mcr.microsoft.com/playwright:v1.62.1-noble
+    # GitHub Actions overrides $HOME for container jobs to a path not owned
+    # by the image's user; Firefox refuses to launch a profile under an
+    # unowned $HOME, so it's reset to the container's actual home directory.
+    env:
+      HOME: /root
 
     steps:
       - uses: actions/checkout@v4
@@ -27,9 +41,6 @@ jobs:
 
       - name: Lint
         run: npm run lint
-
-      - name: Install Playwright browsers
-        run: npx playwright install --with-deps
 
       - name: Run Playwright tests
         run: npm test
