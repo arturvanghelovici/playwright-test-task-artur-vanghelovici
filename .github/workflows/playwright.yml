@@ -19,6 +19,11 @@ jobs:
     # can drift out of sync.
     container:
       image: mcr.microsoft.com/playwright:v1.62.1-noble
+    # GitHub Actions overrides $HOME for container jobs to a path not owned
+    # by the image's user; Firefox refuses to launch a profile under an
+    # unowned $HOME, so it's reset to the container's actual home directory.
+    env:
+      HOME: /root
 
     steps:
       - uses: actions/checkout@v4
