@@ -140,4 +140,22 @@ test.describe('Cart', () => {
     const checkoutPage = new CheckoutPage(page);
     await expect(checkoutPage.firstNameInput).toBeVisible();
   });
+
+  test('cart contents survive a full page reload', async ({ page }) => {
+    const product = await productsPage.productAt(0).getDetails();
+    await productsPage.addToCart(product.name);
+    await expect(productsPage.header.cartBadge).toHaveText('1');
+
+    await page.reload();
+
+    // Cart state is persisted client-side (not just in-memory React state),
+    // so a hard reload must not silently drop it.
+    await expect(productsPage.header.cartBadge).toHaveText('1');
+    await expect(productsPage.product(product.name).removeButton).toBeVisible();
+
+    await productsPage.header.openCart();
+    await page.waitForURL(Route.Cart);
+    const cartPage = new CartPage(page);
+    await cartPage.expectItemVisible(product);
+  });
 });
