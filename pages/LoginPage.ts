@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from '@playwright/test';
+import { Route } from '../data/routes';
 
 export class LoginPage {
   readonly page: Page;
@@ -16,13 +17,24 @@ export class LoginPage {
   }
 
   async goto(): Promise<void> {
-    await this.page.goto('/');
+    await this.page.goto(Route.Login);
   }
 
-  async login(username: string, password: string): Promise<void> {
-    await this.usernameInput.fill(username);
-    await this.passwordInput.fill(password);
-    await this.loginButton.click();
+  async fillLogin(username: string, password: string): Promise<void> {
+    try {
+      await this.usernameInput.fill(username);
+      await this.passwordInput.fill(password);
+    } catch (error) {
+      throw new Error(`Failed to fill login form for user "${username}"`, { cause: error });
+    }
+  }
+
+  async submitLogin(): Promise<void> {
+    try {
+      await this.loginButton.click();
+    } catch (error) {
+      throw new Error('Failed to submit login form', { cause: error });
+    }
   }
 
   async expectErrorMessage(message: string): Promise<void> {
