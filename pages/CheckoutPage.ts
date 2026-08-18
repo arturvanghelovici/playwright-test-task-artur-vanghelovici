@@ -10,6 +10,7 @@ export class CheckoutPage {
   readonly postalCodeInput: Locator;
   readonly continueButton: Locator;
   readonly cancelButton: Locator;
+  readonly errorMessage: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -19,6 +20,7 @@ export class CheckoutPage {
     this.postalCodeInput = page.getByRole('textbox', { name: 'Zip/Postal Code' });
     this.continueButton = page.getByRole('button', { name: 'Continue' });
     this.cancelButton = page.getByRole('button', { name: 'Cancel' });
+    this.errorMessage = page.getByTestId('error');
   }
 
   async fillInfo(firstName: string, lastName: string, postalCode: string): Promise<void> {
