@@ -78,10 +78,6 @@ export class ProductsPage {
     await this.product(productName).addToCart();
   }
 
-  async removeFromCart(productName: string): Promise<void> {
-    await this.product(productName).remove();
-  }
-
   async openProduct(productName: string): Promise<void> {
     await this.product(productName).open();
   }

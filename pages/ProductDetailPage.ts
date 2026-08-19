@@ -27,30 +27,6 @@ export class ProductDetailPage {
     this.removeButton = page.getByRole('button', { name: 'Remove' });
   }
 
-  async addToCart(): Promise<void> {
-    try {
-      await this.addToCartButton.click();
-    } catch (error) {
-      throw new Error('Failed to add product to cart from the detail page', { cause: error });
-    }
-  }
-
-  async removeFromCart(): Promise<void> {
-    try {
-      await this.removeButton.click();
-    } catch (error) {
-      throw new Error('Failed to remove product from cart on the detail page', { cause: error });
-    }
-  }
-
-  async goBackToProducts(): Promise<void> {
-    try {
-      await this.backToProductsButton.click();
-    } catch (error) {
-      throw new Error('Failed to navigate back to products from the detail page', { cause: error });
-    }
-  }
-
   async expectDetails(expected: ProductDetails): Promise<void> {
     await expect(this.name).toHaveText(expected.name);
     await expect(this.description).toHaveText(expected.description);

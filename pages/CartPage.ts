@@ -41,23 +41,11 @@ export class CartPage {
     return new CartLineItem(container, productName);
   }
 
-  async removeItem(productName: string): Promise<void> {
-    await this.item(productName).remove();
-  }
-
   async checkout(): Promise<void> {
     try {
       await this.checkoutButton.click();
     } catch (error) {
       throw new Error('Failed to proceed to checkout from the cart page', { cause: error });
-    }
-  }
-
-  async continueShopping(): Promise<void> {
-    try {
-      await this.continueShoppingButton.click();
-    } catch (error) {
-      throw new Error('Failed to continue shopping from the cart page', { cause: error });
     }
   }
 

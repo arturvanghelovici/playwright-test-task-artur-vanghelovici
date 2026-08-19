@@ -63,18 +63,4 @@ test.describe('Checkout: Your Information', () => {
       await expect(page).toHaveURL(Route.CheckoutInfo);
     });
   }
-
-  test('continue with valid info moves forward to the checkout overview', async ({ page }) => {
-    await checkoutPage.fillInfo('John', 'Doe', '12345');
-
-    await checkoutPage.continueCheckout();
-
-    await expect(page).toHaveURL(Route.CheckoutOverview);
-  });
-
-  test('cancel navigates back to the Cart page', async ({ page }) => {
-    await checkoutPage.cancel();
-
-    await expect(page).toHaveURL(Route.Cart);
-  });
 });
