@@ -41,14 +41,6 @@ class ProductCard extends CatalogLineItem {
       throw new Error(`Failed to add "${this.label}" to cart`, { cause: error });
     }
   }
-
-  async remove(): Promise<void> {
-    try {
-      await this.removeButton.click();
-    } catch (error) {
-      throw new Error(`Failed to remove "${this.label}" from cart`, { cause: error });
-    }
-  }
 }
 
 export class ProductsPage {
@@ -76,10 +68,6 @@ export class ProductsPage {
 
   async addToCart(productName: string): Promise<void> {
     await this.product(productName).addToCart();
-  }
-
-  async removeFromCart(productName: string): Promise<void> {
-    await this.product(productName).remove();
   }
 
   async openProduct(productName: string): Promise<void> {

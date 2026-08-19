@@ -9,7 +9,6 @@ export class CheckoutPage {
   readonly lastNameInput: Locator;
   readonly postalCodeInput: Locator;
   readonly continueButton: Locator;
-  readonly cancelButton: Locator;
   readonly errorMessage: Locator;
 
   constructor(page: Page) {
@@ -19,7 +18,6 @@ export class CheckoutPage {
     this.lastNameInput = page.getByRole('textbox', { name: 'Last Name' });
     this.postalCodeInput = page.getByRole('textbox', { name: 'Zip/Postal Code' });
     this.continueButton = page.getByRole('button', { name: 'Continue' });
-    this.cancelButton = page.getByRole('button', { name: 'Cancel' });
     this.errorMessage = page.getByTestId('error');
   }
 
@@ -38,14 +36,6 @@ export class CheckoutPage {
       await this.continueButton.click();
     } catch (error) {
       throw new Error('Failed to continue from the checkout info page', { cause: error });
-    }
-  }
-
-  async cancel(): Promise<void> {
-    try {
-      await this.cancelButton.click();
-    } catch (error) {
-      throw new Error('Failed to cancel from the checkout info page', { cause: error });
     }
   }
 }
