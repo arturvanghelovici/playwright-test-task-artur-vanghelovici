@@ -9,22 +9,16 @@ import type { ProductDetails } from '../components/CatalogLineItem';
 export class ProductDetailPage {
   readonly page: Page;
   readonly header: HeaderComponent;
-  readonly backToProductsButton: Locator;
   readonly name: Locator;
   readonly description: Locator;
   readonly price: Locator;
-  readonly addToCartButton: Locator;
-  readonly removeButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
     this.header = new HeaderComponent(page);
-    this.backToProductsButton = page.getByRole('button', { name: 'Back to products' });
     this.name = page.getByTestId('inventory-item-name');
     this.description = page.getByTestId('inventory-item-desc');
     this.price = page.getByTestId('inventory-item-price');
-    this.addToCartButton = page.getByRole('button', { name: 'Add to cart' });
-    this.removeButton = page.getByRole('button', { name: 'Remove' });
   }
 
   async expectDetails(expected: ProductDetails): Promise<void> {

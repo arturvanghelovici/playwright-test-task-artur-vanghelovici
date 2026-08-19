@@ -26,9 +26,6 @@ npm run lint
 npm run format
 ```
 
-Every one of those commands runs the `setup` project first (`tests/auth.setup.ts`). It logs in once as `standard_user`
-and writes the session to `playwright/.auth/`. You don't log in by hand before running tests, that's the point of it.
-
 ## Project structure
 
 `tests/` has one spec file per flow, `login.spec.ts`, `cart.spec.ts`, `checkout.spec.ts`, `e2e.spec.ts`, plus
@@ -55,16 +52,18 @@ CSS or XPath selectors anywhere.
 Product and order data is never hardcoded. Tests read whatever the Products page actually shows (`getDetails()`) and
 check that the same value survives the trip through cart, checkout, and confirmation. That's a deliberate choice: it
 means the suite doesn't care what the catalog contains, and it doesn't need editing if SauceDemo's product list ever
-changes. `CatalogLineItem` came out of this pattern too, `ProductCard`, `CartLineItem`, and the Checkout Overview page's
-rows all needed the same name/description/price locators.
+changes. `CatalogLineItem` (`components/CatalogLineItem.ts`) holds the name/description/price locators that repeat
+everywhere a product is listed. The Cart and Checkout Overview pages use it directly, their rows are read-only in
+this suite. `ProductCard` (in `ProductsPage.ts`) is the one subclass, it adds the add-to-cart button the Products
+page needs on top.
 
 Authenticated state is a Playwright `setup` project rather than `globalSetup`. That's the pattern Playwright currently
 documents for this, and the practical reason to prefer it is visibility, it runs as a real, named test with its own
 entry in the report, instead of a step that happens silently before anything else starts.
 
 CI runs inside `mcr.microsoft.com/playwright:v1.62.1-noble` (pinned to the exact `@playwright/test` version in
-`package-lock.json`) rather than provisioning a bare Ubuntu runner with `apt-get install --with-deps` every time. That
-wasn't the first approach.
+`package-lock.json`) instead of installing browsers and OS dependencies with `apt-get` on every run. That step used to
+be slow and unreliable enough to stall a run, the pre-built image skips it entirely.
 
 TypeScript is pinned to `6.0.3`, not the current `7.x`. `typescript-eslint`'s peer dependency range doesn't cover TS7
 yet, so installing the newest TypeScript would leave the lint step broken. That's an ecosystem-lag constraint, not a
